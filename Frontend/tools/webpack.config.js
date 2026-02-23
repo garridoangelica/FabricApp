@@ -11,13 +11,16 @@ console.log('=========================================================');
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.ts',
+    entry: {
+        main: './src/index.ts',
+        standalone: './src/standalone.tsx',
+    },
     output: {
-        filename: 'bundle.[fullhash].js',
+        filename: '[name].bundle.[fullhash].js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/',
     },
-    devtool: 'source-map',
+    devtool: false,
     plugins: [
         new CleanWebpackPlugin(),
         new Webpack.DefinePlugin({
@@ -26,6 +29,13 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: './src/index.html',
+            chunks: ['main'],
+            filename: 'index.html',
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            chunks: ['standalone'],
+            filename: 'preview.html',
         }),
         new CopyWebpackPlugin({
             patterns: [
@@ -48,6 +58,7 @@ module.exports = {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 loader: 'ts-loader',
+                options: { transpileOnly: true },
             },
             {
                 test: /\.s[ac]ss$/i,
@@ -62,6 +73,7 @@ module.exports = {
     devServer: {
         port: 60006,
         open: false,
+        compress: true,
         historyApiFallback: true,
         headers: {
             'Access-Control-Allow-Origin': '*',

@@ -9,7 +9,7 @@ import {
 
 export async function initialize(params: InitParams) {
     const workloadClient = createWorkloadClient();
-    const workloadName = process.env.WORKLOAD_NAME;
+    const workloadName = process.env.WORKLOAD_NAME as string;
     const catalogItemType = workloadName + '.CatalogItem';
 
     workloadClient.action.onAction(async function ({ action, data }) {
